@@ -30,6 +30,15 @@
     <ClCompile Include="Voronoi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VParabola.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VPoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VSweepLine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -39,6 +48,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Voronoi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VParabola.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VPoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VSweepLine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

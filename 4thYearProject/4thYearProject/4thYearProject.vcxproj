@@ -22,11 +22,17 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Voronoi.cpp" />
+    <ClCompile Include="VParabola.cpp" />
+    <ClCompile Include="VPoint.cpp" />
+    <ClCompile Include="VSweepLine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
     <ClInclude Include="ScreenSize.h" />
     <ClInclude Include="Voronoi.h" />
+    <ClInclude Include="VParabola.h" />
+    <ClInclude Include="VPoint.h" />
+    <ClInclude Include="VSweepLine.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="ASSETS\IMAGES\SFML-LOGO.png">
