@@ -7,67 +7,75 @@
     </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Resource Files\FONTS">
-      <UniqueIdentifier>{b5e82806-bf9b-4fdf-b17c-c35282c021a5}</UniqueIdentifier>
+    <Filter Include="Header Files\Voronoi">
+      <UniqueIdentifier>{763848f9-48dd-4ddb-b0c0-6c480e6eb7b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\IMAGES">
-      <UniqueIdentifier>{1d793ccc-0d22-4eea-8d0e-c5b5a5270a40}</UniqueIdentifier>
+    <Filter Include="Source Files\Voronoi">
+      <UniqueIdentifier>{ee968042-cbd5-4d6d-a9bd-16ba6477e863}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Voronoi.cpp">
+    <ClCompile Include="Quadratic.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SweepLine.cpp">
+      <Filter>Source Files\Voronoi</Filter>
+    </ClCompile>
+    <ClCompile Include="VEdge.cpp">
+      <Filter>Source Files\Voronoi</Filter>
+    </ClCompile>
+    <ClCompile Include="Voronoi.cpp">
+      <Filter>Source Files\Voronoi</Filter>
     </ClCompile>
     <ClCompile Include="VParabola.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Voronoi</Filter>
+    </ClCompile>
+    <ClCompile Include="VPolygon.cpp">
+      <Filter>Source Files\Voronoi</Filter>
     </ClCompile>
     <ClCompile Include="VPoint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VSweepLine.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Voronoi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Quadratic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SweepLine.h">
+      <Filter>Header Files\Voronoi</Filter>
+    </ClInclude>
+    <ClInclude Include="VEdge.h">
+      <Filter>Header Files\Voronoi</Filter>
+    </ClInclude>
+    <ClInclude Include="Voronoi.h">
+      <Filter>Header Files\Voronoi</Filter>
+    </ClInclude>
+    <ClInclude Include="VParabola.h">
+      <Filter>Header Files\Voronoi</Filter>
+    </ClInclude>
+    <ClInclude Include="VPolygon.h">
+      <Filter>Header Files\Voronoi</Filter>
+    </ClInclude>
     <ClInclude Include="ScreenSize.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Voronoi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VParabola.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="VPoint.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Voronoi</Filter>
     </ClInclude>
-    <ClInclude Include="VSweepLine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="ASSETS\IMAGES\SFML-LOGO.png">
-      <Filter>Resource Files\IMAGES</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="ASSETS\FONTS\ariblk.ttf">
-      <Filter>Resource Files\FONTS</Filter>
-    </Font>
   </ItemGroup>
 </Project>

@@ -1,12 +1,13 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include <SDL.h>
+#include <iostream>
 #include "ScreenSize.h"
-class VSweepLine
+class SweepLine
 {
 public:
-	VSweepLine();
+	SweepLine();
 	void update();
-	void render(sf::RenderWindow& t_window);
+	void render(SDL_Renderer* t_renderer);
 	float getYPos();
 private:
 	float m_yPos;
