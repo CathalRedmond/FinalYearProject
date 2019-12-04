@@ -21,5 +21,6 @@ private:
 	//std::vector<VPolygon> m_polygons;
 	//std::vector<VEdge> m_edge;
 	const int NUMBER_OF_POINTS;
+	VParabola topOfScreen;
 };
 
