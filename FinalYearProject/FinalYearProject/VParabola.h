@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include "VPoint.h"
 #include "VEdge.h"
 #include "ScreenSize.h"
@@ -20,6 +21,8 @@ public:
 	float getYPosOfParabola(float t_xPos); 
 	VPoint getPoint();
 
+	bool collisionDetection(VParabola t_otherParabola);
+
 private:
 	void updateParabolaPoints();
 	VPoint m_point;
@@ -27,18 +30,19 @@ private:
 	std::vector<glm::vec2> m_parabolaPoints;
 	std::vector<glm::vec2> m_startpoints;
 	std::vector<glm::vec2> m_endpoints;
-	bool isPointBetweenTwoPoints(glm::vec2 t_point, glm::vec2 startpoint, glm::vec2 endpoint, bool t_isLeftSide);
+	bool isPointBetweenTwoPoints(glm::vec2 t_point, glm::vec2 startpoint, glm::vec2 endpoint);
 
 
-	void findPointsOfCollision(VParabola otherParabola);
+	void findPointsOfCollision();
 	glm::vec3 m_quadraticValues;
 	void updateQuadraticValues();
-	bool isPointOnLine(glm::vec2 t_point);
 	std::vector<VParabola*> touchingParabolas;
 	std::pair<float, float> quadraticFormula(glm::vec3 t_quadraticValues);
 
 	std::vector<VEdge> m_edge;
-
 	void updateEdges();
+
+
+	std::pair<glm::vec2, glm::vec2> getPointsOfCollision(VParabola t_otherParabola);
 };
 

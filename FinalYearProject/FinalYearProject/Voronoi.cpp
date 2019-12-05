@@ -18,9 +18,9 @@ Voronoi::Voronoi():
 
 	m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 2, 500)));
 
-	m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 3, 200)));
-	m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 4, 300)));
-	m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 7, 450)));
+	//m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 3, 200)));
+	//m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 4, 300)));
+	//m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 7, 450)));
 
 
 
