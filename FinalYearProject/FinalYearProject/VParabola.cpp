@@ -32,9 +32,9 @@ void VParabola::update(float t_sweepLineYPos)
 	updateEdges();
 }
 
-void VParabola::render(SDL_Renderer* t_renderer)
+void VParabola::render(SDL_Renderer* t_renderer, glm::vec3 t_colourOfParabola)
 {
-	SDL_SetRenderDrawColor(t_renderer, 0, 255, 0, 255);
+	SDL_SetRenderDrawColor(t_renderer, t_colourOfParabola.x, t_colourOfParabola.y, t_colourOfParabola.z, 255);
 	for (int index = 0; index < m_parabolaPoints.size(); index++)
 	{
 		if (isValidPoint(m_parabolaPoints[index]) && m_parabolaPoints[index].y < m_sweepLineYPos)
@@ -70,7 +70,9 @@ void VParabola::updateCollisionPoints()
 void VParabola::setTouchingParabola(VParabola* t_otherParabola)
 {
 	touchingParabolas.push_back(t_otherParabola);
-	m_edge.push_back(VEdge());
+	m_edge.push_back(VEdge(m_point, t_otherParabola->m_point));
+	//touchingParabolas[touchingParabolas.size() - 1]->m_edge.push_back(VEdge(m_point, t_otherParabola->m_point));
+	
 }
 
 void VParabola::updateParabolaPoints()
@@ -85,7 +87,9 @@ void VParabola::updateParabolaPoints()
 
 float VParabola::getYPosOfParabola(float t_xPos)
 {
-	return (std::pow(t_xPos - m_point.getPosition().x, 2.0f) / (2.0f * (m_point.getPosition().y - m_sweepLineYPos))) + ((m_point.getPosition().y + m_sweepLineYPos) / 2.0f);
+	float y = (std::pow(t_xPos - m_point.getPosition().x, 2.0f) / (2.0f * (m_point.getPosition().y - m_sweepLineYPos))) + ((m_point.getPosition().y + m_sweepLineYPos) / 2.0f);
+
+	return y;
 }
 
 VPoint VParabola::getPoint()
@@ -95,13 +99,22 @@ VPoint VParabola::getPoint()
 
 bool VParabola::collisionDetection(VParabola t_otherParabola)
 {
+	updateQuadraticValues();
+
+
+	t_otherParabola.updateQuadraticValues();
+
 	std::pair<glm::vec2, glm::vec2> collisionPoints = getPointsOfCollision(t_otherParabola);
 	if (collisionPoints.first.x != NULL && collisionPoints.second.x != NULL)
 	{
-		if (collisionPoints.first.y == t_otherParabola.getYPosOfParabola(collisionPoints.first.x) &&
-			collisionPoints.second.y == t_otherParabola.getYPosOfParabola(collisionPoints.second.x))
+		if (collisionPoints.first.y + 20 >= t_otherParabola.getYPosOfParabola(collisionPoints.first.x) || 
+			collisionPoints.first.y - 20 <= t_otherParabola.getYPosOfParabola(collisionPoints.first.x))
 		{
-			return true;
+			if (collisionPoints.second.y + 20 >= t_otherParabola.getYPosOfParabola(collisionPoints.second.x) ||
+				collisionPoints.second.y - 20 <= t_otherParabola.getYPosOfParabola(collisionPoints.second.x))
+			{
+				return true;
+			}
 		}
 	}
 	return false;
@@ -130,7 +143,23 @@ bool VParabola::isPointBetweenTwoPoints(glm::vec2 t_point,glm::vec2 startpoint, 
 		if (startpoint.y == endpoint.y ||
 		   (startpoint.x < m_point.getPosition().x && endpoint.x > m_point.getPosition().x))
 		{
-			return t_point.y > startpoint.y&& t_point.y > endpoint.y;
+			if (startpoint.y != endpoint.y)
+			{
+				//left
+				if (t_point.x < m_point.getPosition().x)
+				{
+					return t_point.y > startpoint.y;
+				}
+				else
+				{
+					return t_point.y > endpoint.y;
+
+				}
+			}
+			else
+			{
+				return t_point.y > startpoint.y&& t_point.y > endpoint.y;
+			}
 		}
 		else
 		{
@@ -197,12 +226,14 @@ void VParabola::updateEdges()
 {
 	for (int index = 0; index < m_edge.size() - 1; index++)
 	{
-		m_edge[index].updateStartAndEndpoints(m_endpoints[index], m_startpoints[index + 1]);
+		m_edge[index].updateStartAndEndpoints(m_endpoints[index], m_startpoints[index + 1], false);
 	}
 }
 
 std::pair<glm::vec2, glm::vec2> VParabola::getPointsOfCollision(VParabola t_otherParabola)
 {
+
+
 	glm::vec3 quadraticValues = glm::vec3(m_quadraticValues.x - t_otherParabola.m_quadraticValues.x,
 										  m_quadraticValues.y - t_otherParabola.m_quadraticValues.y,
 										  m_quadraticValues.z - t_otherParabola.m_quadraticValues.z);

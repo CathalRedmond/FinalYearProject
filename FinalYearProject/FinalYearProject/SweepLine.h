@@ -6,7 +6,7 @@ class SweepLine
 {
 public:
 	SweepLine();
-	void update();
+	void update(bool isMouse);
 	void render(SDL_Renderer* t_renderer);
 	float getYPos();
 private:

@@ -16,9 +16,10 @@ Voronoi::Voronoi():
 	m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 2, 100)));
 	m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 2, 400)));
 
-	m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 2, 500)));
+	//m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 2, 500)));
 
 	//m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 3, 200)));
+	////m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH * (2/3.0f), 300)));
 	//m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 4, 300)));
 	//m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 7, 450)));
 
@@ -32,6 +33,10 @@ void Voronoi::render(SDL_Renderer* t_renderer)
 	m_sweepLine.render(t_renderer);
 	for (int index = 0; index < m_parabolas.size(); index++)
 	{
+		if (index == 1)
+		{
+			std::string stopHere = "HERE";
+		}
 		m_parabolas[index].render(t_renderer);
 	}
 	for (int index = 0; index < m_points.size(); index++)
@@ -42,11 +47,13 @@ void Voronoi::render(SDL_Renderer* t_renderer)
 
 void Voronoi::update()
 {
-	m_sweepLine.update();
+	m_sweepLine.update(true);
 	for (int index = 0; index < m_points.size(); index++)
 	{
 		if (!m_points[index].hasTouchedSweepLine() && m_points[index].collisionDetection(m_sweepLine.getYPos()))
 		{
+
+
 			float closestDistance = std::numeric_limits<float>::max();
 			int indexOfClosest = -1;
 			for (int index2 = 0; index2 < m_parabolas.size(); index2++)
@@ -75,10 +82,6 @@ void Voronoi::update()
 	}
 	for (int index = 0; index < m_parabolas.size(); index++)
 	{
-		if (index == 1)
-		{
-			std::string stopHere = "HERE";
-		}
 		m_parabolas[index].update(m_sweepLine.getYPos());
 	}
 }

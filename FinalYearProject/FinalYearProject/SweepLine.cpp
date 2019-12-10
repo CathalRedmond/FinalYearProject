@@ -5,11 +5,18 @@ SweepLine::SweepLine():
 {
 }
 
-void SweepLine::update()
+void SweepLine::update(bool isMouse)
 {
-	int x = 0, y = 0;
-	SDL_GetMouseState(&x, &y);
-	m_yPos = y;
+	if (isMouse)
+	{
+		int x = 0, y = 0;
+		SDL_GetMouseState(&x, &y);
+		m_yPos = y;
+	}
+	else
+	{
+		m_yPos++;
+	}
 }
 
 void SweepLine::render(SDL_Renderer* t_renderer)

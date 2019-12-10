@@ -4,17 +4,18 @@
 #include <iostream>
 #include <algorithm>
 #include "VPoint.h"
-#include "VEdge.h"
 #include "ScreenSize.h"
 #include "vec2.hpp"
 #include "vec3.hpp"
+#include "VEdge.h"
+
 class VParabola
 {
 public:
 	VParabola(VPoint t_parabolaPoint, float t_sweepLineYPos);
 	VParabola(glm::vec3 quadraticValues);
 	void update(float t_sweepLineYPos);
-	void render(SDL_Renderer* t_renderer);
+	void render(SDL_Renderer* t_renderer, glm::vec3 t_colourOfParabola = glm::vec3(0.0f, 255.0f, 0.0f));
 	void updateCollisionPoints();
 	void setTouchingParabola(VParabola* t_otherParabola);
 	bool isValidPoint(glm::vec2 t_point);
