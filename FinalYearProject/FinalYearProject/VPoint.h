@@ -1,16 +1,12 @@
 #pragma once
-#include <SDL.h>
 #include "vec2.hpp"
 class VPoint
 {
 public:
-	VPoint(glm::vec2 t_position);
-	glm::vec2 getPosition();
-	bool collisionDetection(float t_sweepLineYPos);
-	bool hasTouchedSweepLine();
-	void render(SDL_Renderer* t_renderer);
+	VPoint(glm::vec2 t_point = glm::vec2());
+	glm::vec2 getPoint();
+	void setPoint(glm::vec2 t_newPoint);
 private:
-	glm::vec2 m_position;
-	bool m_hasTouchedSweepLine;
+	glm::vec2 m_point;
 };
 

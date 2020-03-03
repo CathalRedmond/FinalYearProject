@@ -1,8 +1,12 @@
 #pragma once
 #include <SDL.h>
 #include <iostream>
-#include "ScreenSize.h"
+#include "glm.hpp"
+#include "gtc/random.hpp"
 #include "Voronoi.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_sdl.h"
+#include "imgui/imgui_impl_sdl.h"
 
 class Game
 {
@@ -11,15 +15,16 @@ public:
 	~Game();
 	void run();
 private:
-	void processEvent();
+	void processEvents();
 	void update();
 	void render();
 	void cleanup();
+	void initVoronoi();
 
 	SDL_Window* m_window;
 	SDL_Renderer* m_renderer;
 	bool m_isRunning;
 	Voronoi m_voronoi;
-
+	bool m_voronoiInitialised;
 };
 

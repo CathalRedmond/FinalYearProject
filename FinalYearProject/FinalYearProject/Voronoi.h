@@ -1,26 +1,28 @@
 #pragma once
 #include <SDL.h>
-#include <vector>
 #include "VPolygon.h"
-#include "VPoint.h"
-#include "VEdge.h"
-#include "VParabola.h"
-#include "SweepLine.h"
-
+#include <vector>
+#include <algorithm>
+#include "vec2.hpp"
 class Voronoi
 {
 public:
 	Voronoi();
-	void render(SDL_Renderer* t_renderer);
+	void start(std::vector<glm::vec2> t_pointPositions);
 	void update();
-	void handleKeyBoardInput(SDL_Event t_keyboardEvent);
+	void render(SDL_Renderer* t_renderer);
+	void processEvents(SDL_Event* t_event);
 private:
-	SweepLine m_sweepLine;
-	std::vector<VPoint> m_points;
-	std::vector<VParabola> m_parabolas;
-	//std::vector<VPolygon> m_polygons;
-	//std::vector<VEdge> m_edge;
-	const int NUMBER_OF_POINTS;
-	VParabola topOfScreen;
+	void collisionDetection();
+	std::vector<VPolygon*> m_polygons;
+	// line that moves down the screen
+	int m_directrix;
+	// bool if voronoi is running
+	bool m_run;
+
+	std::vector<glm::vec2> m_points;
+	glm::vec2 closestPointToMouse;
+	bool moveWithMouse = true;
+
 };
 

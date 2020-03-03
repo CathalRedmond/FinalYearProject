@@ -1,91 +1,206 @@
 #include "Voronoi.h"
 
-Voronoi::Voronoi():
-	NUMBER_OF_POINTS{3},
-	topOfScreen{glm::vec3(0,0,-1)}
+Voronoi::Voronoi() :
+	m_directrix{ -50 },
+	m_run{ false }
 {
-	//float r3 = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
-	//for (int index = 0; index < 10; index++)
-	//{
-	//	float x = static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / SCREEN_SIZE::WIDTH));
-	//	float y = static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / SCREEN_SIZE::HEIGHT));
-	//	m_points.push_back(VPoint(glm::vec2(x,y)));
-	//}
-	//m_points.push_back(VPoint(glm::vec2(100, SCREEN_SIZE::HEIGHT - 100)));
-	//m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH - 100, SCREEN_SIZE::HEIGHT - 100)));
-	m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 2, 100)));
-	m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 2, 400)));
-
-	//m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 2, 500)));
-
-	//m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 3, 200)));
-	////m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH * (2/3.0f), 300)));
-	//m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 4, 300)));
-	//m_points.push_back(VPoint(glm::vec2(SCREEN_SIZE::WIDTH / 7, 450)));
-
-
-
-
 }
 
-void Voronoi::render(SDL_Renderer* t_renderer)
+void Voronoi::start(std::vector<glm::vec2> t_pointPositions)
 {
-	m_sweepLine.render(t_renderer);
-	for (int index = 0; index < m_parabolas.size(); index++)
+
+	//    sort(v.begin(), v.end(), compareInterval); 
+	std::sort(t_pointPositions.begin(), t_pointPositions.end(), Utility::isHigher);
+
+
+	for (size_t index = 0; index < t_pointPositions.size(); index++)
 	{
-		if (index == 1)
-		{
-			std::string stopHere = "HERE";
-		}
-		m_parabolas[index].render(t_renderer);
+		m_polygons.push_back(new VPolygon(t_pointPositions.at(index)));
 	}
-	for (int index = 0; index < m_points.size(); index++)
-	{
-		m_points[index].render(t_renderer);
-	}
+	m_run = true;
 }
 
 void Voronoi::update()
 {
-	m_sweepLine.update(true);
-	for (int index = 0; index < m_points.size(); index++)
+	if (m_run)
 	{
-		if (!m_points[index].hasTouchedSweepLine() && m_points[index].collisionDetection(m_sweepLine.getYPos()))
+		if (moveWithMouse)
+		{
+			int y = 0;
+			SDL_GetMouseState(0, &y);
+			m_directrix = y;
+		}
+		else
+		{
+			m_directrix += 6;
+		}
+		if (m_directrix > 0 && m_directrix < 600)
 		{
 
-
-			float closestDistance = std::numeric_limits<float>::max();
-			int indexOfClosest = -1;
-			for (int index2 = 0; index2 < m_parabolas.size(); index2++)
+			for (size_t index = 0; index < m_polygons.size(); index++)
 			{
-				if (m_parabolas[index2].isValidPoint(glm::vec2(m_points[index].getPosition().x, m_parabolas[index2].getYPosOfParabola(m_points[index].getPosition().x))))
+				m_polygons.at(index)->update(m_directrix);
+			}
+			collisionDetection();
+		}
+		else if (m_directrix > 600)
+		{
+			m_polygons;
+			////cleanup
+			UnfinishedEdges unfinishedEdges;
+			for (size_t index = 0; index < m_polygons.size(); index++)
+			{
+				UnfinishedEdges newUnfinished = m_polygons[index]->cleanUpEdges();
+				unfinishedEdges.insert(unfinishedEdges.begin(), newUnfinished.begin(), newUnfinished.end());
+			}
+			for (size_t index = 0; index < unfinishedEdges.size(); index++)
+			{
+				for (size_t index2 = index + 1; index2 < unfinishedEdges.size(); index2++)
 				{
-					if (abs(m_points[index].getPosition().y - m_parabolas[index2].getPoint().getPosition().y))
+					if (Utility::doPairsHaveSameValues(unfinishedEdges[index].second, unfinishedEdges[index2].second))
 					{
-						closestDistance = abs(m_points[index].getPosition().y - m_parabolas[index2].getPoint().getPosition().y);
-						indexOfClosest = index2;
+						unfinishedEdges.erase(unfinishedEdges.begin() + (index2));
 					}
 				}
 			}
-			m_parabolas.push_back(VParabola(m_points[index], m_sweepLine.getYPos()));
+	
+			if (!unfinishedEdges.empty())
+			{
+				for (size_t index = 0; index < unfinishedEdges.size(); index++)
+				{
+					std::vector<int> idsOne = m_polygons.at(unfinishedEdges[index].second.first)->getAllOtherIds();
+					std::vector<int> idsTwo = m_polygons.at(unfinishedEdges[index].second.second)->getAllOtherIds();
+					std::vector<int> validOutComes;
+					for (size_t index = 0; index < idsOne.size(); index++)
+					{
+						if (std::find(idsTwo.begin(), idsTwo.end(), idsOne[index]) != idsTwo.end())
+						{
+							validOutComes.push_back(idsOne[index]);
+						}
+					}
+					// get angel between
+					glm::vec2 vecOne;
+					glm::vec2 vecTwo;
+					std::vector<VEdge*> edges = m_polygons.at(validOutComes[0])->getEdges();
+					for (size_t edgeIndex = 0; edgeIndex < edges.size(); edgeIndex++)
+					{
+						if (Utility::doPairsHaveSameValues(std::pair<int, int>(unfinishedEdges[index].second.first, validOutComes[0]), edges[edgeIndex]->getPolygonIds()))
+						{
+							vecOne = edges[edgeIndex]->getStartPoint() - edges[edgeIndex]->getEndPoint();
+						}
+						else if (Utility::doPairsHaveSameValues(std::pair<int, int>(unfinishedEdges[index].second.second, validOutComes[0]), edges[edgeIndex]->getPolygonIds()))
+						{
+							vecTwo = edges[edgeIndex]->getStartPoint() - edges[edgeIndex]->getEndPoint();
 
-			if (indexOfClosest != -1)
-			{
-				m_parabolas[m_parabolas.size()-1].setTouchingParabola(&m_parabolas[indexOfClosest]);
-				m_parabolas[indexOfClosest].setTouchingParabola(&m_parabolas[m_parabolas.size() - 1]);
+						}
+					}
+					float angle = glm::degrees(std::acos(glm::dot(vecOne, vecTwo) / (glm::length(vecOne) * glm::length(vecTwo))));
+					angle /= 2.0f;
+
+					glm::vec2 start = unfinishedEdges[index].first->getStartPoint();
+
+					glm::vec2 end;
+
+					glm::vec2 vecBetween = glm::vec2(std::cos(glm::radians(angle)), std::sin(glm::radians(angle)));
+
+
+
+					end = start + vecBetween;
+					while (Utility::withinBounds(end))
+					{
+						end += vecBetween;
+					}
+
+
+
+
+
+					unfinishedEdges[index].first->setPoint(end);
+
+
+				}
 			}
-			else
-			{
-				m_parabolas[m_parabolas.size() - 1].setTouchingParabola(&topOfScreen);
-			}
+
 		}
-	}
-	for (int index = 0; index < m_parabolas.size(); index++)
-	{
-		m_parabolas[index].update(m_sweepLine.getYPos());
 	}
 }
 
-void Voronoi::handleKeyBoardInput(SDL_Event t_keyboardEvent)
+void Voronoi::render(SDL_Renderer* t_renderer)
 {
+	SDL_SetRenderDrawColor(t_renderer, 255, 0, 255, 255);
+	SDL_RenderDrawLine(t_renderer, 0, m_directrix, 800, m_directrix);
+	for (size_t index = 0; index < m_polygons.size(); index++)
+	{
+		m_polygons.at(index)->render(t_renderer);
+	}
+	SDL_SetRenderDrawColor(t_renderer, 0, 0, 0, 255);
+}
+
+void Voronoi::processEvents(SDL_Event* t_event)
+{
+	//if (t_event->type == SDL_MOUSEMOTION)
+	//{
+	//	// check if point within x position and higlight
+	//	glm::vec2 newPoint = glm::vec2(SDL_MouseButtonEvent().x, SDL_MouseButtonEvent().y);
+	//	glm::vec2 closestPoint = m_points[0];
+	//	for (size_t index = 1; index < m_points.size(); index++)
+	//	{
+	//		/*if (glm::distance(closestPoint, newPoint));
+	//		{
+
+	//		}*/
+	//	}
+	//}
+	if (t_event->type == SDL_MOUSEBUTTONDOWN)
+	{
+		if (t_event->button.button == SDL_BUTTON_LEFT)
+		{
+			// add to points
+			/*glm::vec2 newPoint = glm::vec2(SDL_MouseButtonEvent().x, SDL_MouseButtonEvent().y);
+			m_points.push_back(newPoint);*/
+			moveWithMouse = !moveWithMouse;
+
+		}
+		else if (SDL_MouseButtonEvent().button == SDL_BUTTON_RIGHT)
+		{
+			// remove points
+		}
+	}
+	
+}
+
+void Voronoi::collisionDetection()
+{
+	float polygonOnePositionY;
+	for (size_t index = 0; index < m_polygons.size(); index++)
+	{
+		if (m_polygons.at(index)->getActive())
+		{
+			polygonOnePositionY = m_polygons[index]->getCentrePointPosition().y;
+			for (size_t index2 = index + 1; index2 < m_polygons.size(); index2++)
+			{
+				if (m_polygons.at(index2)->getActive())
+				{
+					// only check collision of polygons above current one
+					if (polygonOnePositionY <= m_polygons[index2]->getCentrePointPosition().y)
+					{
+						if (m_polygons[2]->getActive())
+						{
+							int stophere = 3;
+						}
+						if (m_polygons[index]->collisionDetectionProper(*m_polygons[index2]) == CollisionType::ThirdCollisionCheck)
+						{
+							for (size_t index3 = index2 + 1; index3 < m_polygons.size(); index3++)
+							{
+								if (m_polygons.at(index3)->getActive())
+								{
+									m_polygons[index]->collisionDetectionThreeWayProper(*m_polygons[index2], *m_polygons[index3]);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
