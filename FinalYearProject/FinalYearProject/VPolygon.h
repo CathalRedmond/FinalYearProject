@@ -13,13 +13,7 @@ class VPolygon
 public:
 	VPolygon(glm::vec2 t_pointPosition); 
 
-
-
-
-
-
-
-
+ 
 
 	void update(int t_directrixPos);
 	void processEvents();
@@ -37,8 +31,6 @@ public:
 	std::vector<VEdge*> getEdges();
 
 
-
-
 	VParabola& getParabola();
 	std::vector<int> getAllOtherIds();
 
@@ -52,15 +44,11 @@ private:
 
 	SDL_Color polygonColour;
 
-
 	void createEdge(VPolygon& t_otherPolygon);
 	bool collidedAlready(int t_otherPolygonId);
 	bool collidedAlreadyThreeWay(int t_otherPolygonOneId, int t_otherPolygonTwoId);
  
 	std::vector<int> checkForThirdCollision(VPolygon& t_otherPolygon);
-
-
-
 
 	std::vector<int> m_collidedPolygonsId;
 	std::vector<std::pair<int, int>> m_threeWayCollidedPolygonsId;

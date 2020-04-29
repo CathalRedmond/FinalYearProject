@@ -7,6 +7,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_sdl.h"
 #include "imgui/imgui_impl_sdl.h"
+#include <random>
 
 class Game
 {
@@ -26,5 +27,8 @@ private:
 	bool m_isRunning;
 	Voronoi m_voronoi;
 	bool m_voronoiInitialised;
+	std::vector<glm::vec2> points;
+
+	int count;
 };
 

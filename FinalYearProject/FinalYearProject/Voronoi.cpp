@@ -18,13 +18,14 @@ void Voronoi::start(std::vector<glm::vec2> t_pointPositions)
 		m_polygons.push_back(new VPolygon(t_pointPositions.at(index)));
 	}
 	m_run = true;
+	m_directrix = 0;
 }
 
 void Voronoi::update()
 {
 	if (m_run)
 	{
-		if (moveWithMouse)
+		if (!moveWithMouse)
 		{
 			int y = 0;
 			SDL_GetMouseState(0, &y);
@@ -34,7 +35,7 @@ void Voronoi::update()
 		{
 			m_directrix += 6;
 		}
-		if (m_directrix > 0 && m_directrix < 600)
+		if (m_directrix > 0 && m_directrix < 1000)
 		{
 
 			for (size_t index = 0; index < m_polygons.size(); index++)
@@ -43,7 +44,7 @@ void Voronoi::update()
 			}
 			collisionDetection();
 		}
-		else if (m_directrix > 600)
+		else if (m_directrix > 1000)
 		{
 			m_polygons;
 			////cleanup
@@ -158,15 +159,23 @@ void Voronoi::processEvents(SDL_Event* t_event)
 			// add to points
 			/*glm::vec2 newPoint = glm::vec2(SDL_MouseButtonEvent().x, SDL_MouseButtonEvent().y);
 			m_points.push_back(newPoint);*/
-			moveWithMouse = !moveWithMouse;
+			//moveWithMouse = !moveWithMouse;
 
 		}
 		else if (SDL_MouseButtonEvent().button == SDL_BUTTON_RIGHT)
 		{
+			m_polygons.clear();
 			// remove points
 		}
 	}
-	
+	if (t_event->type == SDL_KEYDOWN)
+	{
+
+		if (t_event->key.keysym.sym == SDLK_q)
+		{
+			m_polygons.clear();
+		}
+	}
 }
 
 void Voronoi::collisionDetection()
